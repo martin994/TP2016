@@ -10,5 +10,10 @@ public class Peaje {
 	public Peaje(float costoPeaje) {
 		this.costoPeaje = costoPeaje;
 	}
+	@Override
+	public String toString() {
+		return "Peaje [costoPeaje=" + costoPeaje + "]";
+	}
+	
 	
 }
