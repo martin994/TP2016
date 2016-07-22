@@ -9,6 +9,8 @@ public class Mapa {
 	private Peaje inicioMapa, finMapa;
 	private static int menosKms = 99, menosPeajes = 99;
 	private static LinkedList<LinkedList<Peaje>> caminosCortos,caminosMenosPeajes;
+	private static Mapa subMap=null;
+	private static Set<Peaje>  peajesposibles=null;
 
 	public static void main(String[] args) {
 		Peaje p1 = new Peaje(1);
@@ -49,14 +51,28 @@ public class Mapa {
 		mp.agregarAvenida(av9);
 		mp.agregarAvenida(av10);
 		mp.agregarAvenida(av11);
+		mp.subGrafo(p2, 4);
+		Mapa  mp2 = null;
+	//	mp.getListaAvenidas().get(0).setEstado(false);
+		subMap.destinosPosibles(p2);
 		
+		System.out.println("Peajes: "+ subMap.peajesposibles.toString());
 		
-		mp.masCortos(p1, p7);
+		try {
+			mp2= mp.clone();
+			
+			
+		} catch (CloneNotSupportedException e) {
+			System.out.println("Error al clonar el mapa");
+			e.printStackTrace();
+		}
+		
+		mp2.masCortos(p1, p7);
 		System.out.println("Menor longitud: "+menosKms);
 		for (LinkedList<Peaje> peajes : caminosCortos)
 			System.out.println(peajes.toString());
 		
-		mp.menosPeajes(p1, p7);
+		mp2.menosPeajes(p1, p7);
 		System.out.println("Menor cantidad de peajes: "+menosPeajes);
 		for (LinkedList<Peaje> peajes : caminosMenosPeajes)
 			System.out.println(peajes.toString());
@@ -110,7 +126,7 @@ public class Mapa {
 		return null;
 	}
 
-	public void editarEstadoAvenida(Peaje inicio, Peaje fin, boolean estado) {
+	public void editarEstadoAvenida(Peaje inicio, Peaje fin, boolean estado) {//sin terminar
 		for (Avenida iterador : listaAvenidas) {
 			if (iterador.getInicio().equals(inicio)
 					&& iterador.getDestino().equals(fin))
@@ -192,6 +208,63 @@ public class Mapa {
 			}
 		}
 	}
+	
+	public void subGrafo(Peaje inicio, int nivel) {
+		subMap=new Mapa(inicio, null);
+		LinkedList<Peaje> comienzo = new LinkedList<Peaje>();
+		comienzo.add(inicio); 
+		subGrafoBT(comienzo, nivel);
+
+	}
+	
+	
+	private void subGrafoBT(LinkedList<Peaje> tramo, int nivel) {
+			
+		
+		subMap.agregarPeaje(tramo.peekLast());
+
+		if(nivel !=0){
+
+			ArrayList<Avenida> candidatos = getCandidatos(tramo.peekLast());
+			for (Avenida avenidaAlterantiva : candidatos) { 
+				if (!subMap.getListaPeajes().contains(avenidaAlterantiva.getDestino())) {
+					subMap.agregarAvenida(avenidaAlterantiva.clone());
+					tramo.add(avenidaAlterantiva.getDestino());
+					subGrafoBT(tramo, nivel-1); 
+					tramo.removeLast(); 
+				}
+
+			}
+		}
+	}
+	
+	public void destinosPosibles(Peaje inicio) {
+		peajesposibles= new HashSet<Peaje>();
+		LinkedList<Peaje> comienzo = new LinkedList<Peaje>();
+		comienzo.add(inicio); 
+		destinosPosiblesBT(comienzo);
+
+	}
+	
+	
+	private void destinosPosiblesBT(LinkedList<Peaje> tramo) {
+		peajesposibles.add(tramo.peekLast());
+		// caso recursivo
+				
+			ArrayList<Avenida> candidatos = getCandidatos(tramo.peekLast());
+			for (Avenida avenidaAlterantiva : candidatos) { 
+
+				if (!tramo.contains(avenidaAlterantiva.getDestino())) { 
+
+					tramo.add(avenidaAlterantiva.getDestino()); 
+					destinosPosiblesBT(tramo);
+					tramo.removeLast();
+				
+			}
+		}
+	}
+	
+	
 
 	private ArrayList<Avenida> getCandidatos(Peaje inicio) {
 		ArrayList<Avenida> candidatos = new ArrayList<Avenida>();
@@ -204,4 +277,26 @@ public class Mapa {
 		return candidatos;
 	}
 
+	@Override
+	protected Mapa clone() throws CloneNotSupportedException {
+		Mapa mapaNuevo = new Mapa(this.inicioMapa, this.finMapa);
+		for(Avenida iterador:listaAvenidas)
+		mapaNuevo.agregarAvenida(iterador.clone());;
+		mapaNuevo.setListaPeajes(listaPeajes);
+		return mapaNuevo;
+	}
+
+	public Set<Peaje> getListaPeajes() {
+		return listaPeajes;
+	}
+
+	public void setListaPeajes(Set<Peaje> listaPeajes) {
+		this.listaPeajes = listaPeajes;
+	}
+
+	public ArrayList<Avenida> getListaAvenidas() {
+		return listaAvenidas;
+	}
+
+	
 }

@@ -42,4 +42,10 @@ public class Avenida {
 		this.habilitado = habilitado;
 	}
 
+	@Override
+	protected Avenida clone() {
+		Avenida mellizaMaligna= new Avenida(getNombreAvenida(), getFlujoMaximo(), getDistancia(), getInicio(), getDestino(), isHabilitado());
+		return mellizaMaligna;
+	}
+
 }
