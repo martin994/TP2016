@@ -8,6 +8,10 @@ public class Avenida {
 		return nombreAvenida;
 	}
 
+	public void setFlujoMaximo(int flujoMaximo) {
+		this.flujoMaximo = flujoMaximo;
+	}
+
 	public int getFlujoMaximo() {
 		return flujoMaximo;
 	}
