@@ -1,7 +1,13 @@
+package Datos;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.Math;
 
 public class Mapa {
@@ -12,16 +18,16 @@ public class Mapa {
 	private static LinkedList<LinkedList<Peaje>> caminosCortos,caminosMenosPeajes;
 	private static Mapa subMap=null;
 	private static Set<Peaje>  peajesposibles=null;
-	//private static LinkedList<Avenida> avenidasFlujoMaximo=null; 
+	
 
-	public static void main(String[] args) {
-		Peaje p1 = new Peaje(1);
-		Peaje p2 = new Peaje(2);
-		Peaje p3 = new Peaje(3);
-		Peaje p4 = new Peaje(4);
-		Peaje p5 = new Peaje(5);
-		Peaje p6 = new Peaje(6);
-		Peaje p7 = new Peaje(7);
+	public static void main(String[] args) throws FileNotFoundException, IOException {
+		Peaje p1 = new Peaje(1,"p1");
+		Peaje p2 = new Peaje(2,"p1");
+		Peaje p3 = new Peaje(3,"p1");
+		Peaje p4 = new Peaje(4,"p1");
+		Peaje p5 = new Peaje(5,"p1");
+		Peaje p6 = new Peaje(6,"p1");
+		Peaje p7 = new Peaje(7,"p1");
 
 		Avenida av1 = new Avenida("", 1, 1, p1, p2, true);
 		Avenida av2 = new Avenida("", 3, 2, p1, p3, true);
@@ -53,8 +59,9 @@ public class Mapa {
 		mp.agregarAvenida(av9);
 		mp.agregarAvenida(av10);
 		mp.agregarAvenida(av11);
+		Mapa mp2= new Mapa("C:\\Users\\Usuario\\Desktop\\TPDIED\\Prueba1.csv");
 		
-		System.out.println(mp.flujoMaximo());
+		System.out.println(mp2.flujoMaximo());
 		
 //		mp.subGrafo(p2, 4);
 //		Mapa  mp2 = null;
@@ -87,8 +94,14 @@ public class Mapa {
 
 	}
 
-	public void agregarPeaje(float costo) {
-		listaPeajes.add(new Peaje(costo));
+	public Mapa(String fichero) throws FileNotFoundException, IOException {
+		listaPeajes = new HashSet<Peaje>();
+		listaAvenidas = new ArrayList<Avenida>();
+		cargarMapa(fichero);
+	}
+
+	public void agregarPeaje(float costo, String id) {
+		listaPeajes.add(new Peaje(costo,id));
 
 	}
 
@@ -342,5 +355,38 @@ public class Mapa {
 		return listaAvenidas;
 	}
 
+	
+	void cargarMapa(String archivo) throws FileNotFoundException, IOException {
+	      String cadena,aux="C:\\Users\\Usuario\\Desktop\\TPDIED\\Prueba1.csv";
+	      FileReader f = new FileReader(archivo);
+	      BufferedReader b = new BufferedReader(f);
+	      while((cadena = b.readLine())!=null) {
+	    	  StringTokenizer st = new StringTokenizer(cadena, ";");
+
+
+	    	   switch(st.nextToken()){
+		    	   case "P":
+		    		   Peaje nuevoPeaje=new Peaje(st.nextToken(), Float.parseFloat(st.nextToken()));
+		    		   agregarPeaje(nuevoPeaje);
+		    		   if(st.nextToken().compareTo("SI")==0)inicioMapa=nuevoPeaje;
+		    		   if(st.nextToken().compareTo("SI")==0) finMapa=nuevoPeaje;
+		    		   break;
+		    	   case"A":
+		    		   String inicio=st.nextToken(),fin=st.nextToken();
+		    		   Peaje p1=null,p2=null;
+		    		   for(Peaje p:listaPeajes){
+		    			   if (inicio.compareTo(p.getId())==0) p1=p;
+		    			   if(fin.compareTo(p.getId())==0)p2=p;
+		    		   }
+		    		   Avenida nuevaAvenida=new Avenida("", Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), p1, p2, (st.nextToken().compareTo("SI")==0));
+		    		   agregarAvenida(nuevaAvenida);
+		    		   break;
+		    		  default:break;
+	    	   }
+
+	    	   
+	      }
+	      b.close();
+	}
 	
 }

@@ -1,3 +1,4 @@
+package Datos;
 public class Avenida {
 	private String nombreAvenida;
 	private int flujoMaximo, distancia;

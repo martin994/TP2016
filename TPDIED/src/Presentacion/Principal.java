@@ -10,15 +10,23 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
+
 import java.awt.Font;
+
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
-import java.awt.Canvas;
+
+
 import java.awt.Color;
+import java.awt.Graphics;
 
-public class Principal {
+public class Principal extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JFrame frmSentiers;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JTextField textField;
@@ -32,8 +40,11 @@ public class Principal {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					Principal window = new Principal();
+					Nodo n1=new Nodo();
 					window.frmSentiers.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -165,5 +176,15 @@ public class Principal {
 		scrollPane.setViewportView(textArea);
 		textArea.setWrapStyleWord(true);
 		textArea.setLineWrap(true);
+		
+		Nodo panel_1 = new Nodo();
+		panel_1.setBounds(300, 32, 490, 430);
+		frmSentiers.getContentPane().add(panel_1);
+		
+		
 	}
+	
+	
 }
+
+
