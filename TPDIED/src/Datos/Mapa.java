@@ -2,6 +2,7 @@ package Datos;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.io.BufferedReader;
@@ -93,11 +94,19 @@ public class Mapa {
 		listaPeajes.add(finMapa);
 
 	}
+	public Mapa(){
+		listaPeajes = new HashSet<Peaje>();
+		listaAvenidas = new ArrayList<Avenida>();
+	}
 
 	public Mapa(String fichero) throws FileNotFoundException, IOException {
 		listaPeajes = new HashSet<Peaje>();
 		listaAvenidas = new ArrayList<Avenida>();
 		cargarMapa(fichero);
+	}
+	
+	public Peaje getFinMapa() {
+		return finMapa;
 	}
 
 	public void agregarPeaje(float costo, String id) {
@@ -357,7 +366,7 @@ public class Mapa {
 
 	
 	void cargarMapa(String archivo) throws FileNotFoundException, IOException {
-	      String cadena,aux="C:\\Users\\Usuario\\Desktop\\TPDIED\\Prueba1.csv";
+	      String cadena;
 	      FileReader f = new FileReader(archivo);
 	      BufferedReader b = new BufferedReader(f);
 	      while((cadena = b.readLine())!=null) {
@@ -389,4 +398,27 @@ public class Mapa {
 	      b.close();
 	}
 	
+	
+	public void cargarNiveles(){
+		int nivelFin=0;
+		LinkedList<Peaje> cola= new LinkedList<Peaje>();
+		LinkedList<Peaje> recorridos= new LinkedList<Peaje>();
+		inicioMapa.setNivel(0);
+		cola.add(inicioMapa);
+		recorridos.add(inicioMapa);
+		while (!cola.isEmpty()){
+			for(Avenida iterador:listaAvenidas){
+				if(iterador.getDestino()!= finMapa && iterador.getInicio()==cola.getFirst() && !recorridos.contains(iterador.getDestino())){
+					cola.add(iterador.getDestino());
+					iterador.getDestino().setNivel(iterador.getInicio().getNivel()+1);
+					nivelFin=(iterador.getInicio().getNivel()+1>nivelFin) ? iterador.getInicio().getNivel()+2:nivelFin;
+					recorridos.add(iterador.getDestino());
+				}
+//				if(!recorridos.contains(iterador.getDestino())) recorridos.add(iterador.getDestino());
+				
+			}
+			cola.removeFirst();
+		}
+		finMapa.setNivel(nivelFin+1);
+	}
 }

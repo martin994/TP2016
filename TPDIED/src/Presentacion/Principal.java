@@ -18,8 +18,14 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 
 
+
+
+import Datos.Mapa;
+
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Principal extends JFrame {
 
@@ -42,7 +48,7 @@ public class Principal extends JFrame {
 				try {
 					
 					Principal window = new Principal();
-					Nodo n1=new Nodo();
+					
 					window.frmSentiers.setVisible(true);
 					
 				} catch (Exception e) {
@@ -177,8 +183,17 @@ public class Principal extends JFrame {
 		textArea.setWrapStyleWord(true);
 		textArea.setLineWrap(true);
 		
-		Nodo panel_1 = new Nodo();
-		panel_1.setBounds(300, 32, 490, 430);
+		Grafo panel_1=null;
+		try {
+			panel_1 = new Grafo(new Mapa("C:\\Users\\Usuario\\Desktop\\TPDIED\\Prueba1.csv"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		panel_1.setBounds(300, 10, 490, 430);
 		frmSentiers.getContentPane().add(panel_1);
 		
 		

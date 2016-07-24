@@ -4,6 +4,8 @@ import java.util.ArrayList;
 public class Peaje {
 	private String id;
 	private float costoPeaje;
+	private int nivel=-1;
+	private boolean color=false;
 
 	public float getCostoPeaje() {
 		return costoPeaje;
@@ -23,6 +25,18 @@ public class Peaje {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public int getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(int nivel) {
+		this.nivel = nivel;
+	}
+
+	public void setColor(boolean color) {
+		this.color = color;
 	}
 
 	@Override
