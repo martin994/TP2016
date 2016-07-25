@@ -17,9 +17,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 
-
-
-
 import Datos.Mapa;
 
 import java.awt.Color;
@@ -27,7 +24,18 @@ import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class Principal extends JFrame {
+import javax.swing.JButton;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
+import javax.swing.DropMode;
+
+import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+
+public class Principal extends JFrame implements ActionListener, FocusListener {
 
 	/**
 	 * 
@@ -38,6 +46,14 @@ public class Principal extends JFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
+	private JButton btnEjecutar, btnDibujar;
+	private JRadioButton rdbtnSubmapa, rdbtnDestinosPosibles,rdbtnMenorCantidadDe,rdbtnDistanciaMasCorta,rdbtnFlujoMximoDe, rdbtnCambiarEstadoDe;
+	Grafo panel_1;
+	private JMenuItem mntmNuevoMapa,mntmAgregarAvenida,mntmCargar,mntmSalir,mntmAgregarPeaje, mntmAyuda, mntmAcercaDe;
+	private JButton btnLimpiar;
+	private CargarMapa cmp;
+	private Grafo gf;
+	String st;
 
 	/**
 	 * Launch the application.
@@ -83,123 +99,236 @@ public class Principal extends JFrame {
 		JMenu mnArchivo = new JMenu("Archivo");
 		menuBar.add(mnArchivo);
 		
-		JMenuItem mntmNuevoMapa = new JMenuItem("Nuevo Mapa");
+		 mntmNuevoMapa = new JMenuItem("Nuevo Mapa");
+		 mntmNuevoMapa.addActionListener(this);
 		mnArchivo.add(mntmNuevoMapa);
 		
-		JMenuItem mntmCargar = new JMenuItem("Cargar Mapa");
-		mnArchivo.add(mntmCargar);
+		 mntmCargar = new JMenuItem("Cargar Mapa");
+		 mntmCargar.addActionListener(this);
+		 mnArchivo.add(mntmCargar);
 		
-		JMenuItem mntmSalir = new JMenuItem("Salir");
+		 mntmSalir = new JMenuItem("Salir");
+		 mntmSalir.addActionListener(this);
 		mnArchivo.add(mntmSalir);
 		
 		JMenu mnEditar = new JMenu("Editar");
 		menuBar.add(mnEditar);
 		
-		JMenuItem mntmAgregarPeaje = new JMenuItem("Agregar Peaje");
+		 mntmAgregarPeaje = new JMenuItem("Agregar Peaje");
 		mnEditar.add(mntmAgregarPeaje);
+		mntmAgregarPeaje.addActionListener(this);
 		
-		JMenuItem mntmAgregarAvenida = new JMenuItem("Agregar Avenida");
+		 mntmAgregarAvenida = new JMenuItem("Agregar Avenida");
 		mnEditar.add(mntmAgregarAvenida);
-		
-		JMenuItem mntmCambiarEstadoDe = new JMenuItem("Cambiar estado de avenida");
-		mnEditar.add(mntmCambiarEstadoDe);
+		mntmAgregarAvenida.addActionListener(this);
 		
 		JMenu mnAyuda = new JMenu("Ayuda");
 		menuBar.add(mnAyuda);
-		
-		JMenuItem mntmAyuda = new JMenuItem("Ayuda");
+
+		 mntmAyuda = new JMenuItem("Ayuda");
 		mnAyuda.add(mntmAyuda);
+		mntmAyuda.addActionListener(this);
 		
-		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de...");
+		 mntmAcercaDe = new JMenuItem("Acerca de...");
 		mnAyuda.add(mntmAcercaDe);
+		mntmAcercaDe.addActionListener(this);
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 32, 280, 417);
 		frmSentiers.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JRadioButton rdbtnMenorCantidadDe = new JRadioButton("Menor cantidad de peajes.");
+		 rdbtnMenorCantidadDe = new JRadioButton("Menor cantidad de peajes.");
 		buttonGroup.add(rdbtnMenorCantidadDe);
-		rdbtnMenorCantidadDe.setBounds(0, 23, 184, 23);
+		rdbtnMenorCantidadDe.setBounds(0, 47, 184, 23);
 		panel.add(rdbtnMenorCantidadDe);
+		rdbtnMenorCantidadDe.addFocusListener(this);
 		
-		JRadioButton rdbtnDestinosPosibles = new JRadioButton("Destinos posíbles.");
+		 rdbtnDestinosPosibles = new JRadioButton("Destinos posíbles.");
 		buttonGroup.add(rdbtnDestinosPosibles);
-		rdbtnDestinosPosibles.setBounds(0, 49, 156, 23);
+		rdbtnDestinosPosibles.setBounds(0, 73, 156, 23);
 		panel.add(rdbtnDestinosPosibles);
+		rdbtnDestinosPosibles.addFocusListener(this);
 		
-		JRadioButton rdbtnDistanciaMasCorta = new JRadioButton("Distancia mas corta.");
+		 rdbtnDistanciaMasCorta = new JRadioButton("Distancia mas corta.");
 		buttonGroup.add(rdbtnDistanciaMasCorta);
-		rdbtnDistanciaMasCorta.setBounds(0, 0, 229, 23);
+		rdbtnDistanciaMasCorta.setBounds(0, 24, 229, 23);
 		panel.add(rdbtnDistanciaMasCorta);
+		rdbtnDistanciaMasCorta.addFocusListener(this);
 		
-		JRadioButton rdbtnFlujoMximoDe = new JRadioButton("Flujo m\u00E1ximo de vehículos.");
+		 rdbtnFlujoMximoDe = new JRadioButton("Flujo m\u00E1ximo de vehículos.");
 		buttonGroup.add(rdbtnFlujoMximoDe);
-		rdbtnFlujoMximoDe.setBounds(0, 75, 196, 23);
+		rdbtnFlujoMximoDe.setBounds(0, 99, 196, 23);
 		panel.add(rdbtnFlujoMximoDe);
+		rdbtnFlujoMximoDe.addFocusListener(this);
 		
-		JRadioButton rdbtnSubmapa = new JRadioButton("Submapa.");
+		 rdbtnSubmapa = new JRadioButton("Submapa.");
 		buttonGroup.add(rdbtnSubmapa);
-		rdbtnSubmapa.setBounds(0, 101, 109, 23);
+		rdbtnSubmapa.setBounds(0, 125, 109, 23);
 		panel.add(rdbtnSubmapa);
+		rdbtnSubmapa.addFocusListener(this);
 		
 		JLabel lblDesde = new JLabel("Desde:");
 		lblDesde.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblDesde.setBounds(10, 131, 46, 14);
+		lblDesde.setBounds(0, 157, 46, 14);
 		panel.add(lblDesde);
 		
 		textField = new JTextField();
-		textField.setBounds(55, 129, 46, 20);
+		textField.setBounds(45, 155, 46, 20);
 		panel.add(textField);
+		textField.setEditable(false);
 		textField.setColumns(10);
 		
 		JLabel label = new JLabel("Hasta:");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label.setBounds(111, 132, 46, 14);
+		label.setBounds(101, 158, 46, 14);
 		panel.add(label);
 		
 		textField_1 = new JTextField();
 		textField_1.setColumns(10);
-		textField_1.setBounds(150, 129, 46, 20);
+		textField_1.setBounds(140, 155, 46, 20);
+		textField_1.setEditable(false);
 		panel.add(textField_1);
 		
 		JLabel label_1 = new JLabel("Distancia máxima del submapa:");
 		label_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_1.setBounds(10, 156, 196, 14);
+		label_1.setBounds(0, 182, 196, 14);
 		panel.add(label_1);
 		
 		textField_2 = new JTextField();
 		textField_2.setColumns(10);
-		textField_2.setBounds(196, 154, 46, 20);
+		textField_2.setBounds(186, 180, 46, 20);
+		textField_2.setEditable(false);
 		panel.add(textField_2);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 186, 260, 220);
-		panel.add(scrollPane);
+		 rdbtnCambiarEstadoDe = new JRadioButton("Cambiar estado de avenida.");
+		buttonGroup.add(rdbtnCambiarEstadoDe);
+		rdbtnCambiarEstadoDe.setBounds(0, 0, 184, 23);
+		panel.add(rdbtnCambiarEstadoDe);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
-		scrollPane.setViewportView(textArea);
-		textArea.setWrapStyleWord(true);
-		textArea.setLineWrap(true);
+		 btnEjecutar = new JButton("Ejecutar");
+		btnEjecutar.setBounds(95, 207, 89, 23);
+		panel.add(btnEjecutar);
+		btnEjecutar.addActionListener(this);
 		
-		Grafo panel_1=null;
-		try {
-			panel_1 = new Grafo(new Mapa("C:\\Users\\Usuario\\Desktop\\TPDIED\\Prueba1.csv"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		 btnDibujar = new JButton("Dibujar");
+		btnDibujar.setBounds(186, 207, 89, 23);
+		panel.add(btnDibujar);
+		btnDibujar.addActionListener(this);
+		
+		TextArea textArea = new TextArea();
+		textArea.setSelectionEnd(10);
+		textArea.setBounds(0, 235, 280, 160);
+		panel.add(textArea);
+		
+		btnLimpiar = new JButton("Limpiar");
+		btnLimpiar.setBounds(2, 207, 89, 23);
+		btnLimpiar.addActionListener(this);
+		panel.add(btnLimpiar);
+		
+		
+		panel_1 = new Grafo(new Mapa());
 		panel_1.setBounds(300, 10, 490, 430);
 		frmSentiers.getContentPane().add(panel_1);
 		
 		
 	}
-	
-	
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==mntmNuevoMapa){
+			
+		}else if(e.getSource()==mntmCargar){
+			 cmp= new CargarMapa();
+			 
+			cmp.btnNewButton.addActionListener(this);
+			cmp.setVisible(true);
+		}else if(e.getSource()==mntmSalir){
+			dispose();
+		}else if(e.getSource()==mntmAgregarPeaje){
+			
+		}else if(e.getSource()==mntmAgregarAvenida){
+			
+		}else if(e.getSource()==mntmAcercaDe){
+			
+		}else if(e.getSource()==mntmAyuda){
+			
+		}
+		
+		if(e.getSource()==btnEjecutar){
+			if(rdbtnDestinosPosibles.isSelected()){
+				
+			}else if(rdbtnDistanciaMasCorta.isSelected()){
+				
+			}else if(rdbtnFlujoMximoDe.isSelected()){
+				
+			}else if(rdbtnMenorCantidadDe.isSelected()){
+				
+			}else if(rdbtnSubmapa.isSelected()){
+				
+			}
+			
+		}else if(e.getSource()==btnDibujar){
+			panel_1.repaint();
+		}else if(e.getSource()==btnLimpiar){
+			panel_1= new Grafo(null);
+			panel_1.setVisible(false);
+		}else if(e.getSource()==cmp.btnNewButton){
+			  st= cmp.textField.getText();
+
+						try {
+							panel_1= new Grafo(new Mapa(st));
+							panel_1.setBounds(300, 10, 490, 430);
+							panel_1.setVisible(true);
+							frmSentiers.getContentPane().add(panel_1);
+							panel_1.repaint();
+							
+						} catch (FileNotFoundException e1) {
+							PEmEr error=new PEmEr("Problema Al cargar el archivo");
+							error.setVisible(true);
+						} catch (IOException e1) {
+							PEmEr error=new PEmEr("Problema Al cargar el archivo");
+							error.setVisible(true);
+						}
+		   
+			cmp.dispose();
+		}
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		if(e.getSource()==rdbtnDestinosPosibles){
+			textField.setEditable(true);
+			textField_1.setEditable(false);
+			textField_2.setEditable(false);
+		}else if(e.getSource()==rdbtnDistanciaMasCorta){
+			textField.setEditable(true);
+			textField_1.setEditable(true);
+			textField_2.setEditable(false);
+		}else if(e.getSource()==rdbtnFlujoMximoDe){
+			textField.setEditable(false);
+			textField_1.setEditable(false);
+			textField_2.setEditable(true);
+		}else if(e.getSource()==rdbtnMenorCantidadDe){
+			textField.setEditable(true);
+			textField_1.setEditable(true);
+			textField_2.setEditable(false);
+		}else if(e.getSource()==rdbtnSubmapa){
+			textField.setEditable(true);
+			textField_1.setEditable(false);
+			textField_2.setEditable(true);
+		}else if(e.getSource()==rdbtnCambiarEstadoDe){
+			textField.setEditable(true);
+			textField_1.setEditable(true);
+			textField_2.setEditable(false);
+		}
+		
+	}
+	@Override
+	public void focusLost(FocusEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 

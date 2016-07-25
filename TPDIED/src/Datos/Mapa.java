@@ -118,6 +118,13 @@ public class Mapa {
 		listaPeajes.add(p);
 
 	}
+	
+	
+	
+
+	public Peaje getInicioMapa() {
+		return inicioMapa;
+	}
 
 	public void agregarAvenida(String nombreAvenida, int flujoMaximo,
 			int distancia, Peaje inicio, Peaje destino, boolean habilitado) {
