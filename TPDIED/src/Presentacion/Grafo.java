@@ -64,23 +64,28 @@ public class Grafo extends JPanel {
 	        actual.cargarNiveles();
 	        posicionesNodos(actual);
 	        posicionesAristas(actual);
+	        
 	        for(Arista a:aristas){
+	        	
 		        g.setColor (Color.green);
 		        g.drawLine(a.getpI().x, a.getpI().y, a.getpF().x, a.getpF().y);
 		        g.drawLine(a.getpIzqI().x,a.getpIzqI().y, a.getpIzqF().x, a.getpIzqF().y);
 		        g.drawLine(a.getpDerI().x, a.getpDerI().y, a.getpDerF().x, a.getpDerF().y);
 	        }
 	        for(Nodo n:nodos){
-		        g.setColor (Color.blue);
+	        	if(actual.getInicioMapa().equals(n.getPeaje()))g.setColor (Color.green);
+	        	else if(actual.getFinMapa()==n.getPeaje()) g.setColor (Color.red);
+	        	else if(actual.getPeajesposibles()!=null && actual.getPeajesposibles().contains(n.getPeaje())) g.setColor (Color.red);
+	        	else g.setColor (Color.blue);
 		        g.fillOval(n.getCentro().x, n.getCentro().y, 25, 25);
-		        g.setColor (Color.red);
+		        g.setColor (Color.white);
 		        g.drawString(n.getPeaje().getId(), n.getCentro().x+7, n.getCentro().y+17);
 	        }
         
         }
         
     }
-    
+   
     
     private void posicionesNodos(Mapa mp){
     	nodos = new LinkedList<Nodo>();
@@ -111,5 +116,15 @@ public class Grafo extends JPanel {
     	}
     		
     }
+
+	public Mapa getMapa() {
+		return actual;
+	}
+	public Peaje getPeaje(String id){
+		for(Nodo iterador: nodos){
+			if(iterador.getPeaje().getId().compareTo(id)==0)return iterador.getPeaje();
+		}
+		return null;
+	}
     
 }

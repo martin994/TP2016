@@ -15,10 +15,10 @@ public class Mapa {
 	private Set<Peaje> listaPeajes;
 	private ArrayList<Avenida> listaAvenidas;
 	private Peaje inicioMapa, finMapa;
-	private static int menosKms = 99, menosPeajes = 99,flujoMaximo=0 ;
-	private static LinkedList<LinkedList<Peaje>> caminosCortos,caminosMenosPeajes;
-	private static Mapa subMap=null;
-	private static Set<Peaje>  peajesposibles=null;
+	private  int menosKms = 99999, menosPeajes = 99,flujoMaximo=0 ;
+	private  LinkedList<LinkedList<Peaje>> caminosCortos,caminosMenosPeajes;
+	private  Mapa subMap=null;
+	private  Set<Peaje>  peajesposibles=null;
 	
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -91,7 +91,7 @@ public class Mapa {
 		this.inicioMapa = inicioMapa;
 		this.finMapa = finMapa;
 		listaPeajes.add(inicioMapa);
-		listaPeajes.add(finMapa);
+		if(finMapa!=null)listaPeajes.add(finMapa);
 
 	}
 	public Mapa(){
@@ -249,7 +249,8 @@ public class Mapa {
 			
 		
 		subMap.agregarPeaje(tramo.peekLast());
-
+		if (nivel==0)
+			subMap.finMapa=tramo.peekLast();
 		if(nivel !=0){
 
 			ArrayList<Avenida> candidatos = getCandidatos(tramo.peekLast());
@@ -257,7 +258,8 @@ public class Mapa {
 				if (!subMap.getListaPeajes().contains(avenidaAlterantiva.getDestino())) {
 					subMap.agregarAvenida(avenidaAlterantiva.clone());
 					tramo.add(avenidaAlterantiva.getDestino());
-					subGrafoBT(tramo, nivel-1); 
+					subGrafoBT(tramo, nivel-1);
+					
 					tramo.removeLast(); 
 				}
 
@@ -342,6 +344,7 @@ public class Mapa {
 					peajes.add(avenidaAlterantiva.getDestino());
 					flujoMaximoBT(tramo,peajes, Math.min(minimo, tramo.peekLast().getFlujoMaximo())); 
 					peajes.removeLast();
+					
 					tramo.removeLast(); 
 				}
 
@@ -415,7 +418,7 @@ public class Mapa {
 		recorridos.add(inicioMapa);
 		while (!cola.isEmpty()){
 			for(Avenida iterador:listaAvenidas){
-				if(iterador.getDestino()!= finMapa && iterador.getInicio()==cola.getFirst() && !recorridos.contains(iterador.getDestino())){
+				if(finMapa!=null && iterador.getDestino()!= finMapa && iterador.getInicio()==cola.getFirst() && !recorridos.contains(iterador.getDestino())){
 					cola.add(iterador.getDestino());
 					iterador.getDestino().setNivel(iterador.getInicio().getNivel()+1);
 					nivelFin=(iterador.getInicio().getNivel()+1>nivelFin) ? iterador.getInicio().getNivel()+2:nivelFin;
@@ -426,6 +429,36 @@ public class Mapa {
 			}
 			cola.removeFirst();
 		}
-		finMapa.setNivel(nivelFin+1);
+		if(finMapa!=null)finMapa.setNivel(nivelFin+1);
 	}
+
+	public  int getFlujoMaximo() {
+		return flujoMaximo;
+	}
+
+	public  LinkedList<LinkedList<Peaje>> getCaminosCortos() {
+		return caminosCortos;
+	}
+
+	public  LinkedList<LinkedList<Peaje>> getCaminosMenosPeajes() {
+		return caminosMenosPeajes;
+	}
+
+	public  Mapa getSubMap() {
+		return subMap;
+	}
+
+	public Set<Peaje> getPeajesposibles() {
+		return peajesposibles;
+	}
+
+	public Peaje getPeaje(String text) {
+		for(Peaje iterador: listaPeajes){
+			if(iterador.getId().compareTo(text)==0) return iterador;
+		}
+		return null;
+	}
+	
+	
+	
 }

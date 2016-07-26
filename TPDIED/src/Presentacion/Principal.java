@@ -17,7 +17,9 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 
+import Datos.Avenida;
 import Datos.Mapa;
+import Datos.Peaje;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -48,11 +50,14 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 	private JTextField textField_2;
 	private JButton btnEjecutar, btnDibujar;
 	private JRadioButton rdbtnSubmapa, rdbtnDestinosPosibles,rdbtnMenorCantidadDe,rdbtnDistanciaMasCorta,rdbtnFlujoMximoDe, rdbtnCambiarEstadoDe;
-	Grafo panel_1;
+	private Grafo panel_1;
 	private JMenuItem mntmNuevoMapa,mntmAgregarAvenida,mntmCargar,mntmSalir,mntmAgregarPeaje, mntmAyuda, mntmAcercaDe;
 	private JButton btnLimpiar;
 	private CargarMapa cmp;
 	private Grafo gf;
+	private TextArea textArea;
+	private  AgregarNodo aN;
+	private AgregarAvenida aA;
 	String st;
 
 	/**
@@ -94,7 +99,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 794, 21);
-		frmSentiers.getContentPane().add(menuBar);
+		frmSentiers.setJMenuBar(menuBar);
 		
 		JMenu mnArchivo = new JMenu("Archivo");
 		menuBar.add(mnArchivo);
@@ -108,7 +113,14 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		 mnArchivo.add(mntmCargar);
 		
 		 mntmSalir = new JMenuItem("Salir");
-		 mntmSalir.addActionListener(this);
+		 mntmSalir.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				
+			}
+		});
 		mnArchivo.add(mntmSalir);
 		
 		JMenu mnEditar = new JMenu("Editar");
@@ -116,18 +128,91 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		
 		 mntmAgregarPeaje = new JMenuItem("Agregar Peaje");
 		mnEditar.add(mntmAgregarPeaje);
-		mntmAgregarPeaje.addActionListener(this);
+		mntmAgregarPeaje.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(panel_1.getMapa().getInicioMapa()==null){
+					PEmEr error=new PEmEr("No existe Mapa, cree uno primero");
+					error.setVisible(true);
+				}else{
+					aN = new AgregarNodo();
+					aN.setBounds(100, 100, 309, 128);
+					
+					aN.getAgregar().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent arg1) {
+							panel_1.getMapa().agregarPeaje(new Peaje(aN.getId().getText(),Float.parseFloat(aN.getCosto().getText())));
+						}
+					});
+					aN.getSalir().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent arg1) {
+							aN.dispose();
+							
+						}
+					});
+				}
+				aN.setVisible(true);
+				
+			}
+		});
+		
 		
 		 mntmAgregarAvenida = new JMenuItem("Agregar Avenida");
 		mnEditar.add(mntmAgregarAvenida);
-		mntmAgregarAvenida.addActionListener(this);
+		mntmAgregarAvenida.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(panel_1.getMapa().getInicioMapa()==null){
+					PEmEr error=new PEmEr("No existe Mapa, cree uno primero");
+					error.setVisible(true);
+				}else{
+					aA=new AgregarAvenida();
+					aA.getAgregar().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							panel_1.getMapa().agregarAvenida(new Avenida("",Integer.parseInt(aA.getFlujo().getText())
+									,Integer.parseInt(aA.getLongitud().getText())
+									,panel_1.getMapa().getPeaje(aA.getDesde().getText()),
+									panel_1.getMapa().getPeaje(aA.getHasta().getText()),
+									true));
+									
+							}
+							
+						});
+					aA.getSalir().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							aA.destruir();//cierra la ventana
+							
+						}
+					});
+					aA.setVisible(true);
+				}
+				
+				
+			}
+		});
 		
 		JMenu mnAyuda = new JMenu("Ayuda");
 		menuBar.add(mnAyuda);
 
 		 mntmAyuda = new JMenuItem("Ayuda");
 		mnAyuda.add(mntmAyuda);
-		mntmAyuda.addActionListener(this);
+		mntmAyuda.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		 mntmAcercaDe = new JMenuItem("Acerca de...");
 		mnAyuda.add(mntmAcercaDe);
@@ -216,7 +301,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		panel.add(btnDibujar);
 		btnDibujar.addActionListener(this);
 		
-		TextArea textArea = new TextArea();
+		 textArea = new TextArea();
 		textArea.setSelectionEnd(10);
 		textArea.setBounds(0, 235, 280, 160);
 		panel.add(textArea);
@@ -238,60 +323,85 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==mntmNuevoMapa){
 			
-		}else if(e.getSource()==mntmCargar){
-			 cmp= new CargarMapa();
-			 
-			cmp.btnNewButton.addActionListener(this);
+		}
+		if(e.getSource()==mntmCargar){
+			cmp= new CargarMapa();
+			cmp.btnNewButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e1) {
+					if(e1.getSource()==cmp.btnNewButton){
+						st= cmp.textField.getText();
+
+							try {
+								panel_1= new Grafo(new Mapa(st));
+								panel_1.setBounds(300, 10, 490, 430);
+								panel_1.setVisible(true);
+								frmSentiers.getContentPane().add(panel_1);
+								panel_1.repaint();
+								
+							} catch (FileNotFoundException ex) {
+								PEmEr error=new PEmEr("Problema Al cargar el archivo");
+								error.setVisible(true);
+							} catch (IOException ex) {
+								PEmEr error=new PEmEr("Problema Al cargar el archivo");
+								error.setVisible(true);
+							}
+				   
+					cmp.dispose();
+					}
+					
+				}
+			});
 			cmp.setVisible(true);
-		}else if(e.getSource()==mntmSalir){
-			dispose();
-		}else if(e.getSource()==mntmAgregarPeaje){
+		}
+		if(e.getSource()==mntmSalir){
+			this.dispose();
+		}
+		
+		if(e.getSource()==mntmAgregarAvenida){
 			
-		}else if(e.getSource()==mntmAgregarAvenida){
+		}
+		if(e.getSource()==mntmAcercaDe){
 			
-		}else if(e.getSource()==mntmAcercaDe){
-			
-		}else if(e.getSource()==mntmAyuda){
+		}
+		if(e.getSource()==mntmAyuda){
 			
 		}
 		
 		if(e.getSource()==btnEjecutar){
 			if(rdbtnDestinosPosibles.isSelected()){
 				
+				panel_1.getMapa().destinosPosibles(panel_1.getPeaje(textField.getText()));
+				textArea.append("Destinos posibles: "+panel_1.getMapa().getPeajesposibles()+"\n");
+				
+				panel_1.repaint();
 			}else if(rdbtnDistanciaMasCorta.isSelected()){
-				
+				panel_1.getMapa().masCortos(panel_1.getPeaje(textField.getText()), panel_1.getPeaje(textField_1.getText()));
+				textArea.append("El camino mas corto es de: "+panel_1.getMapa().getCaminosCortos()+"\n");
+				panel_1.repaint();
 			}else if(rdbtnFlujoMximoDe.isSelected()){
-				
+				textArea.append("Flujo Máximo: "+panel_1.getMapa().flujoMaximo()+" vehiculos por hora\n");
+				panel_1.repaint();
 			}else if(rdbtnMenorCantidadDe.isSelected()){
-				
+				panel_1.getMapa().menosPeajes(panel_1.getPeaje(textField.getText()), panel_1.getPeaje(textField_1.getText()));
+				textArea.append("Camino con menos peajes: "+panel_1.getMapa().getCaminosMenosPeajes()+"\n");
+				panel_1.repaint();
 			}else if(rdbtnSubmapa.isSelected()){
+				panel_1.getMapa().subGrafo(panel_1.getPeaje(textField.getText()), Integer.parseInt(textField_2.getText()));
+				textArea.append("El subgrafo contiene a los peajes: "+panel_1.getMapa().getSubMap().getListaPeajes()+"\n");
+				Grafo panel_2 = new Grafo(panel_1.getMapa().getSubMap());
+				panel_2.setBounds(300, 10, 490, 430);
+				frmSentiers.getContentPane().add(panel_2);
+				panel_2.repaint();
 				
-			}
+			}//C:\Users\Usuario\Desktop\TPDIED\Prueba1.csv
 			
 		}else if(e.getSource()==btnDibujar){
 			panel_1.repaint();
 		}else if(e.getSource()==btnLimpiar){
 			panel_1= new Grafo(null);
 			panel_1.setVisible(false);
-		}else if(e.getSource()==cmp.btnNewButton){
-			  st= cmp.textField.getText();
-
-						try {
-							panel_1= new Grafo(new Mapa(st));
-							panel_1.setBounds(300, 10, 490, 430);
-							panel_1.setVisible(true);
-							frmSentiers.getContentPane().add(panel_1);
-							panel_1.repaint();
-							
-						} catch (FileNotFoundException e1) {
-							PEmEr error=new PEmEr("Problema Al cargar el archivo");
-							error.setVisible(true);
-						} catch (IOException e1) {
-							PEmEr error=new PEmEr("Problema Al cargar el archivo");
-							error.setVisible(true);
-						}
-		   
-			cmp.dispose();
 		}
 	}
 
@@ -308,7 +418,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		}else if(e.getSource()==rdbtnFlujoMximoDe){
 			textField.setEditable(false);
 			textField_1.setEditable(false);
-			textField_2.setEditable(true);
+			textField_2.setEditable(false);
 		}else if(e.getSource()==rdbtnMenorCantidadDe){
 			textField.setEditable(true);
 			textField_1.setEditable(true);
