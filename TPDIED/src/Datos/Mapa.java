@@ -458,6 +458,15 @@ public class Mapa {
 		}
 		return null;
 	}
+
+	public void cambiarEstado(Peaje peaje, Peaje peaje2) {
+		for(Avenida iterador:listaAvenidas){
+			if(iterador.getInicio()==peaje && iterador.getDestino()==peaje2)iterador.setEstado(!iterador.isHabilitado());
+			
+		}
+		
+		
+	}
 	
 	
 	

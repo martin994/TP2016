@@ -56,21 +56,25 @@ public class Grafo extends JPanel {
        
     }
     
-    public void paint (Graphics g)
+    public void paint (Graphics g) throws java.lang.NullPointerException
     {
     	
     	super.paint(g);
         if(!(actual.getInicioMapa()==null)){
+        	try{
 	        actual.cargarNiveles();
 	        posicionesNodos(actual);
 	        posicionesAristas(actual);
-	        
+        	}catch(NullPointerException e){
+        		PEmEr error = new PEmEr("Ingrese Peajes validos");
+        	}
 	        for(Arista a:aristas){
 	        	
-		        g.setColor (Color.green);
-		        g.drawLine(a.getpI().x, a.getpI().y, a.getpF().x, a.getpF().y);
-		        g.drawLine(a.getpIzqI().x,a.getpIzqI().y, a.getpIzqF().x, a.getpIzqF().y);
-		        g.drawLine(a.getpDerI().x, a.getpDerI().y, a.getpDerF().x, a.getpDerF().y);
+		       if(a.getAvenida().isHabilitado()) g.setColor (new Color(0,205,0 ));
+		       else g.setColor (new Color(255,114,86));
+		        g.drawLine(a.getpI().x+12, a.getpI().y+12, a.getpF().x+12, a.getpF().y+12);
+		        g.drawLine(a.getpIzqI().x+12,a.getpIzqI().y+12, a.getpIzqF().x+12, a.getpIzqF().y+12);
+		        g.drawLine(a.getpDerI().x+12, a.getpDerI().y+12, a.getpDerF().x+12, a.getpDerF().y+12);
 	        }
 	        for(Nodo n:nodos){
 	        	if(actual.getInicioMapa().equals(n.getPeaje()))g.setColor (Color.green);
@@ -125,6 +129,11 @@ public class Grafo extends JPanel {
 			if(iterador.getPeaje().getId().compareTo(id)==0)return iterador.getPeaje();
 		}
 		return null;
+	}
+
+	public void setMapa(Mapa mp) {
+		actual=mp;
+		
 	}
     
 }

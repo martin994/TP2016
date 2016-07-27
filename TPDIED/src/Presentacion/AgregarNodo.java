@@ -49,7 +49,7 @@ public class AgregarNodo extends JFrame{
 		frame = new JFrame();
 		frame.setBounds(100, 100, 309, 128);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
+		setTitle("Sentiers - Agregar peaje");
 
 		
 		JPanel panel = new JPanel();

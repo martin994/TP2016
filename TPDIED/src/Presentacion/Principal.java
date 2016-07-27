@@ -58,6 +58,8 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 	private TextArea textArea;
 	private  AgregarNodo aN;
 	private AgregarAvenida aA;
+	private Ayuda ayuda;
+	private CrearMapa crearMapa;
 	String st;
 
 	/**
@@ -105,8 +107,33 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		menuBar.add(mnArchivo);
 		
 		 mntmNuevoMapa = new JMenuItem("Nuevo Mapa");
-		 mntmNuevoMapa.addActionListener(this);
-		mnArchivo.add(mntmNuevoMapa);
+		 mntmNuevoMapa.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				 crearMapa= new CrearMapa();
+				crearMapa.getAgregar().addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						try{
+						panel_1.setMapa(new Mapa(new Peaje(crearMapa.getId1().getText(),Float.parseFloat(crearMapa.getCosto1().getText())),
+								new Peaje(crearMapa.getId2().getText(),Float.parseFloat(crearMapa.getCosto2().getText()))));
+						crearMapa.dispose();
+						}catch(NumberFormatException exception){
+							PEmEr error = new PEmEr("Complete los campos correctamente");
+							error.setVisible(true);
+						}
+					}
+				});
+				crearMapa.setVisible(true);
+				
+				
+			}
+		});
+		 
+		 mnArchivo.add(mntmNuevoMapa);
 		
 		 mntmCargar = new JMenuItem("Cargar Mapa");
 		 mntmCargar.addActionListener(this);
@@ -205,17 +232,35 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 
 		 mntmAyuda = new JMenuItem("Ayuda");
 		mnAyuda.add(mntmAyuda);
+		
 		mntmAyuda.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				ayuda=new Ayuda();
+				ayuda.getListo().addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent arg1) {
+						ayuda.dispose();
+						
+					}
+				});
+				ayuda.setVisible(true);
 				
 			}
 		});
 		
 		 mntmAcercaDe = new JMenuItem("Acerca de...");
 		mnAyuda.add(mntmAcercaDe);
+		mntmAcercaDe.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				AcercaDe acercaDe = new AcercaDe();
+				acercaDe.setVisible(true);
+			}
+		});
 		mntmAcercaDe.addActionListener(this);
 		
 		JPanel panel = new JPanel();
@@ -288,7 +333,9 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		
 		 rdbtnCambiarEstadoDe = new JRadioButton("Cambiar estado de avenida.");
 		buttonGroup.add(rdbtnCambiarEstadoDe);
+		rdbtnCambiarEstadoDe.addFocusListener(this);
 		rdbtnCambiarEstadoDe.setBounds(0, 0, 184, 23);
+		
 		panel.add(rdbtnCambiarEstadoDe);
 		
 		 btnEjecutar = new JButton("Ejecutar");
@@ -359,48 +406,63 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 			this.dispose();
 		}
 		
-		if(e.getSource()==mntmAgregarAvenida){
-			
-		}
-		if(e.getSource()==mntmAcercaDe){
-			
-		}
-		if(e.getSource()==mntmAyuda){
-			
-		}
+		
+		
 		
 		if(e.getSource()==btnEjecutar){
-			if(rdbtnDestinosPosibles.isSelected()){
-				
-				panel_1.getMapa().destinosPosibles(panel_1.getPeaje(textField.getText()));
-				textArea.append("Destinos posibles: "+panel_1.getMapa().getPeajesposibles()+"\n");
-				
-				panel_1.repaint();
-			}else if(rdbtnDistanciaMasCorta.isSelected()){
-				panel_1.getMapa().masCortos(panel_1.getPeaje(textField.getText()), panel_1.getPeaje(textField_1.getText()));
-				textArea.append("El camino mas corto es de: "+panel_1.getMapa().getCaminosCortos()+"\n");
-				panel_1.repaint();
-			}else if(rdbtnFlujoMximoDe.isSelected()){
-				textArea.append("Flujo Máximo: "+panel_1.getMapa().flujoMaximo()+" vehiculos por hora\n");
-				panel_1.repaint();
-			}else if(rdbtnMenorCantidadDe.isSelected()){
-				panel_1.getMapa().menosPeajes(panel_1.getPeaje(textField.getText()), panel_1.getPeaje(textField_1.getText()));
-				textArea.append("Camino con menos peajes: "+panel_1.getMapa().getCaminosMenosPeajes()+"\n");
-				panel_1.repaint();
-			}else if(rdbtnSubmapa.isSelected()){
-				panel_1.getMapa().subGrafo(panel_1.getPeaje(textField.getText()), Integer.parseInt(textField_2.getText()));
-				textArea.append("El subgrafo contiene a los peajes: "+panel_1.getMapa().getSubMap().getListaPeajes()+"\n");
-				Grafo panel_2 = new Grafo(panel_1.getMapa().getSubMap());
-				panel_2.setBounds(300, 10, 490, 430);
-				frmSentiers.getContentPane().add(panel_2);
-				panel_2.repaint();
-				
-			}//C:\Users\Usuario\Desktop\TPDIED\Prueba1.csv
+			try{
+				if(rdbtnDestinosPosibles.isSelected()){
+					
+					panel_1.getMapa().destinosPosibles(panel_1.getPeaje(textField.getText()));
+					textArea.append("Destinos posibles: "+panel_1.getMapa().getPeajesposibles()+"\n");
+					textArea.setForeground(Color.GREEN);
+					panel_1.repaint();
+					
+				}else if(rdbtnDistanciaMasCorta.isSelected()){
+					panel_1.getMapa().masCortos(panel_1.getPeaje(textField.getText()), panel_1.getPeaje(textField_1.getText()));
+					textArea.append("El camino mas corto es de: "+panel_1.getMapa().getCaminosCortos()+"\n");
+					textArea.setForeground(Color.GREEN);
+					panel_1.repaint();
+				}else if(rdbtnFlujoMximoDe.isSelected()){
+					textArea.append("Flujo Máximo: "+panel_1.getMapa().flujoMaximo()+" vehiculos por hora\n");
+					textArea.setForeground(Color.GREEN);
+					panel_1.repaint();
+				}else if(rdbtnMenorCantidadDe.isSelected()){
+					panel_1.getMapa().menosPeajes(panel_1.getPeaje(textField.getText()), panel_1.getPeaje(textField_1.getText()));
+					textArea.append("Camino con menos peajes: "+panel_1.getMapa().getCaminosMenosPeajes()+"\n");
+					textArea.setForeground(Color.GREEN);
+					panel_1.repaint();
+				}else if(rdbtnSubmapa.isSelected()){
+					panel_1.getMapa().subGrafo(panel_1.getPeaje(textField.getText()), Integer.parseInt(textField_2.getText()));
+					textArea.append("El subgrafo contiene a los peajes: "+panel_1.getMapa().getSubMap().getListaPeajes()+"\n");
+					Grafo panel_2 = new Grafo(panel_1.getMapa().getSubMap());
+					panel_2.setBounds(300, 10, 490, 430);
+					textArea.setForeground(Color.GREEN);
+					frmSentiers.getContentPane().add(panel_2);
+					panel_2.repaint();
+				}else if(rdbtnCambiarEstadoDe.isSelected()){
+					panel_1.getMapa().cambiarEstado(panel_1.getPeaje(textField.getText()), panel_1.getPeaje(textField_1.getText()));
+					textArea.append("El camino mas corto es de: "+panel_1.getMapa().getCaminosCortos()+"\n");
+					textArea.setForeground(Color.GREEN);
+					panel_1.repaint();
+				}//C:\Users\Usuario\Desktop\TPDIED\Prueba1.csv
+			}catch(NullPointerException exception){
+				textArea.setForeground(Color.RED);
+				textArea.append("Cargue correctamente el mapa\n");
+			}catch(NumberFormatException exception){
+				textArea.setForeground(Color.RED);
+				textArea.append("Cargue correctamente el mapa\n");
+			}
 			
 		}else if(e.getSource()==btnDibujar){
 			panel_1.repaint();
 		}else if(e.getSource()==btnLimpiar){
-			panel_1= new Grafo(null);
+			
+			panel_1.setMapa(null);
+			
+			panel_1.setBounds(300, 10, 490, 430);
+			
+			panel_1.repaint();
 			panel_1.setVisible(false);
 		}
 	}

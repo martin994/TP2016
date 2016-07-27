@@ -18,17 +18,18 @@ public class Arista {
 
 	public Arista( Avenida avenida,Point pI, Point pF) {
 		
-		this.pI = pI;
-		this.pF = pF;
-		pDerF=pF;
-		pIzqF=pF;
-		this.avenida = avenida;
 		double alfa=Math.atan2(pF.y-pI.y,pF.x-pI.x);
-		int xa=(int)(pF.x-10*Math.cos(alfa+1));
-		int ya=(int)(pF.y-10*Math.sin(alfa+1));
+		this.pI = pI;
+		this.pF=new Point((int) (pF.x-13*(int)Math.cos(alfa)), (int) (pF.y-(int)13*Math.sin(alfa)));
+		
+		pDerF=this.pF;
+		pIzqF=this.pF;
+		this.avenida = avenida;
+		int xa=(int)(this.pF.x-12*Math.cos(alfa+1));
+		int ya=(int)(this.pF.y-12*Math.sin(alfa+1));
 		pIzqI=new Point(xa, ya);
-		xa=(int)(pF.x-10*Math.cos(alfa-1));
-		ya=(int)(pF.y-10*Math.sin(alfa-1));
+		xa=(int)(this.pF.x-12*Math.cos(alfa-1));
+		ya=(int)(this.pF.y-12*Math.sin(alfa-1));
 		pDerI=new Point(xa, ya);
 	}
 

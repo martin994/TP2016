@@ -38,12 +38,13 @@ public class AgregarAvenida extends JFrame {
 	 * Create the frame.
 	 */
 	public AgregarAvenida() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 230, 180);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 294, 180);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setTitle("Sentiers - Agregar avenida");
 		
 		JLabel lblInicio = new JLabel("Desde:");
 		lblInicio.setBounds(10, 11, 46, 14);
@@ -82,11 +83,11 @@ public class AgregarAvenida extends JFrame {
 		contentPane.add(lblLongitud);
 		
 		 btnSalir = new JButton("Salir");
-		btnSalir.setBounds(115, 111, 89, 23);
+		btnSalir.setBounds(179, 111, 89, 23);
 		contentPane.add(btnSalir);
 		
 		 btnAgregar = new JButton("Agregar");
-		btnAgregar.setBounds(10, 111, 89, 23);
+		btnAgregar.setBounds(80, 111, 89, 23);
 		contentPane.add(btnAgregar);
 	}
 
