@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 public class PEmEr extends JFrame {
 
 	private JPanel contentPane;
-	JLabel lblNewLabel;
+	private JLabel lblNewLabel;
 	/**
 	 * Launch the application.
 	 */

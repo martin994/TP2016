@@ -18,7 +18,7 @@ public class AgregarNodo extends JFrame{
 	private JPanel panel;
 	private JTextField textField;
 	private JTextField textField_1;
-	JButton button_1,button;
+	private JButton button_1,button;
 	/**
 	 * Launch the application.
 	 */

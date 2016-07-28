@@ -58,6 +58,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 	private Ayuda ayuda;
 	private CrearMapa crearMapa;
 	private JLabel lblSeleccioneSuOpcion;
+	
 
 
 	/**
@@ -142,7 +143,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				dispose();
+				System.exit(0);
 				
 			}
 		});
@@ -357,7 +358,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		btnLimpiar.addActionListener(this);
 		panel.add(btnLimpiar);
 		
-		JButton btnMostrarAvenidas = new JButton("Mostrar avenidas");
+		JButton btnMostrarAvenidas = new JButton("Mostrar Avenidas");
 		btnMostrarAvenidas.setBounds(140, 394, 140, 23);
 		panel.add(btnMostrarAvenidas);
 		btnMostrarAvenidas.addActionListener(new ActionListener() {
@@ -435,15 +436,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 			});
 			
 		}
-			
-		
-		if(e.getSource()==mntmSalir){
-			this.dispose();
-		}
-		
-		
-		
-		
+
 		if(e.getSource()==btnEjecutar){
 			try{
 				if(rdbtnDestinosPosibles.isSelected()){
@@ -485,7 +478,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 					textArea.append("El estado de la avenida "+desde.getText()+"->"+hasta.getText()+"ha sido cambiado.\n");
 					textArea.setForeground(Color.GREEN);
 					grafo.repaint();
-				}//C:\Users\Usuario\Desktop\TPDIED\Prueba1.csv
+				}
 			}catch(NullPointerException exception){
 				textArea.setForeground(Color.RED);
 				textArea.append("Cargue correctamente el mapa\n");

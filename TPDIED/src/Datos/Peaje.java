@@ -5,7 +5,7 @@ public class Peaje {
 	private String id;
 	private float costoPeaje;
 	private int nivel=-1;
-	private boolean color=false;
+
 
 	public float getCostoPeaje() {
 		return costoPeaje;
@@ -35,9 +35,7 @@ public class Peaje {
 		this.nivel = nivel;
 	}
 
-	public void setColor(boolean color) {
-		this.color = color;
-	}
+
 
 	@Override
 	public String toString() {

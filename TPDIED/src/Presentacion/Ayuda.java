@@ -61,13 +61,27 @@ public class Ayuda extends JFrame {
 		JTextArea txtrSentiersEsUna_1 = new JTextArea();
 		txtrSentiersEsUna_1.setText("Sentiers es una herramienta dise\u00F1ada para facilitar a los usuarios el \n"
 				+ "transitar por autopistas o rutas."
-				+ "\nPara utilizar sentiers debemos seguir unos simples pasos:"
-				+ "\n  +Crear mapa: Accediendo a la opcion Archivo del menu superior,\n"
+				+ "\nPara aprender a utilizar Sentiers se recomienda leer con atención\n"
+				+ "la esta breve descripcion de su interfaz:"
+				+ "\n  +Archivo: Accediendo a la opcion Archivo del menu superior,\n"
 				+ "   podremos elegir entre cargar un mapa desde un archivo tipo CSV o\n"
 				+ "   crear un mapa nuevo designando un peaje de inicio y fin para\n"
-				+ "   despues poder cargar los otros.\n  "
-				+ "   +Cargar mapa: Accediendo a la opcion Editar del menu superior, \n"
-				+ "   podremos agregar peajes y avenidas.");
+				+ "   despues poder cargar los otros.\n"
+				+ "   +Editar: podemos encontrar las opciones para ampliar nuestro \n"
+				+ "   mapa en este menú, ya sea agregando avenidas o peajes.\n"
+				+ "   +Ayuda: en este menú encontraremos la informacion para utilizar\n"
+				+ "   Sentiers o contactarnos con sus desarrolladores.\n"
+				+ "Funcionalidades:\n"
+				+ "   +Dibujar: nos permite ver o actualizar el mapa.\n"
+				+ "   +Limpiar: así eliminamos nuestro mapa totalmente\n"
+				+ "   +Ejecutar: si seleccionamos una opcion en la parte superior\n"
+				+ "   luego completamos los campos disponibles, así podremos \n"
+				+ "   ejecutar y ver los resultados en el mapa o la pantalla inferior\n"
+				+ "   +Mostrar Peajes: muestra los peajes creados en la pantalla\n"
+				+ "    inferior.\n"
+				+ "   +Mostrar Avenidas: muestra las avenidas creadas en la pantalla\n"
+				+ "   inferior.\n"
+				+ "Muchas gracias por haberse tomado el tiempo de leer esto :D.");
 
 		JScrollPane sc=new JScrollPane(txtrSentiersEsUna_1,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		sc.setBounds(10, 37, 403, 128);
