@@ -20,7 +20,7 @@ public class Arista {
 		
 		double alfa=Math.atan2(pF.y-pI.y,pF.x-pI.x);
 		this.pI = pI;
-		this.pF=new Point((int) (pF.x-13*(int)Math.cos(alfa)), (int) (pF.y-(int)13*Math.sin(alfa)));
+		this.pF=new Point((int) (pF.x-13*Math.cos(alfa)), (int) (pF.y-13*Math.sin(alfa)));
 		
 		pDerF=this.pF;
 		pIzqF=this.pF;
