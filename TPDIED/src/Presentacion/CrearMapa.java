@@ -47,6 +47,7 @@ public class CrearMapa extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 271, 154);
 		getContentPane().setLayout(null);
+		setTitle("Sentiers - Crear Mapa");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);

@@ -6,6 +6,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -60,9 +61,9 @@ public class Mapa {
 		mp.agregarAvenida(av9);
 		mp.agregarAvenida(av10);
 		mp.agregarAvenida(av11);
-		Mapa mp2= new Mapa("C:\\Users\\Usuario\\Desktop\\TPDIED\\Prueba1.csv");
+//		Mapa mp2= new Mapa("C:\\Users\\Usuario\\Desktop\\TPDIED\\Prueba1.csv");
 		
-		System.out.println(mp2.flujoMaximo());
+//		System.out.println(mp2.flujoMaximo());
 		
 //		mp.subGrafo(p2, 4);
 //		Mapa  mp2 = null;
@@ -99,7 +100,7 @@ public class Mapa {
 		listaAvenidas = new ArrayList<Avenida>();
 	}
 
-	public Mapa(String fichero) throws FileNotFoundException, IOException {
+	public Mapa(File fichero) throws FileNotFoundException, IOException {
 		listaPeajes = new HashSet<Peaje>();
 		listaAvenidas = new ArrayList<Avenida>();
 		cargarMapa(fichero);
@@ -375,7 +376,7 @@ public class Mapa {
 	}
 
 	
-	void cargarMapa(String archivo) throws FileNotFoundException, IOException {
+	void cargarMapa(File archivo) throws FileNotFoundException, IOException {
 	      String cadena;
 	      FileReader f = new FileReader(archivo);
 	      BufferedReader b = new BufferedReader(f);
@@ -465,6 +466,26 @@ public class Mapa {
 			
 		}
 		
+		
+	}
+
+	public int getMenosKms() {
+		return menosKms;
+	}
+
+	public void setMenosKms(int menosKms) {
+		this.menosKms = menosKms;
+	}
+
+	public void reSet() {
+		
+		 
+		menosKms = 99999;
+		menosPeajes = 99;
+		flujoMaximo=0 ;
+		caminosCortos=null;
+		caminosMenosPeajes=null;
+		peajesposibles=null;
 		
 	}
 	

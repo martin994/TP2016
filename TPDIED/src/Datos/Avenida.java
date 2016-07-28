@@ -53,4 +53,12 @@ public class Avenida {
 		return mellizaMaligna;
 	}
 
+	@Override
+	public String toString() {
+		return "Avenida [ Inicio="
+				+ inicio.getId() + ", Destino=" + destino.getId() + ",FlujoMaximo="
+				+ flujoMaximo + "Vehículos/h, Distancia=" + distancia+"Kilómetros" + ",  Habilitado="
+				+ habilitado + "]";
+	}
+
 }

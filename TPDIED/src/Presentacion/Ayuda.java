@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
@@ -49,6 +51,7 @@ public class Ayuda extends JFrame {
 	public Ayuda() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 437, 248);
+		setTitle("Sentiers - Ayuda");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -69,6 +72,7 @@ public class Ayuda extends JFrame {
 		JScrollPane sc=new JScrollPane(txtrSentiersEsUna_1,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		sc.setBounds(10, 37, 403, 128);
 		getContentPane().add(sc);
+		txtrSentiersEsUna_1.setEditable(false);
 		
 		JLabel lblAyuda = new JLabel("Ayuda:");
 		lblAyuda.setBounds(185, 11, 46, 14);
@@ -77,6 +81,14 @@ public class Ayuda extends JFrame {
 		 btnNewButton = new JButton("Listo");
 		btnNewButton.setBounds(322, 176, 89, 23);
 		contentPane.add(btnNewButton);
+		btnNewButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				
+			}
+		});
 	}
 
 	public JButton getListo() {

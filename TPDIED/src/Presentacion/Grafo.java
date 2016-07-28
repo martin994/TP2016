@@ -28,7 +28,7 @@ public class Grafo extends JPanel {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                	Grafo frame = new Grafo(new Mapa(""));
+                	Grafo frame = new Grafo(new Mapa(null));
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -85,6 +85,7 @@ public class Grafo extends JPanel {
 		        g.setColor (Color.white);
 		        g.drawString(n.getPeaje().getId(), n.getCentro().x+7, n.getCentro().y+17);
 	        }
+	        getMapa().reSet();
         
         }
         

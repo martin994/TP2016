@@ -2,6 +2,7 @@ package Presentacion;
 
 import java.awt.EventQueue;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JMenuBar;
@@ -45,22 +46,19 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 	private static final long serialVersionUID = 1L;
 	private JFrame frmSentiers;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JButton btnEjecutar, btnDibujar;
+	private JTextField desde,hasta,distanciaSubM;
+	private JButton btnEjecutar, btnDibujar,btnLimpiar;
 	private JRadioButton rdbtnSubmapa, rdbtnDestinosPosibles,rdbtnMenorCantidadDe,rdbtnDistanciaMasCorta,rdbtnFlujoMximoDe, rdbtnCambiarEstadoDe;
-	private Grafo panel_1;
+	private Grafo grafo;
 	private JMenuItem mntmNuevoMapa,mntmAgregarAvenida,mntmCargar,mntmSalir,mntmAgregarPeaje, mntmAyuda, mntmAcercaDe;
-	private JButton btnLimpiar;
 	private CargarMapa cmp;
-	private Grafo gf;
 	private TextArea textArea;
 	private  AgregarNodo aN;
 	private AgregarAvenida aA;
 	private Ayuda ayuda;
 	private CrearMapa crearMapa;
-	String st;
+	private JLabel lblSeleccioneSuOpcion;
+
 
 	/**
 	 * Launch the application.
@@ -118,7 +116,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						try{
-						panel_1.setMapa(new Mapa(new Peaje(crearMapa.getId1().getText(),Float.parseFloat(crearMapa.getCosto1().getText())),
+						grafo.setMapa(new Mapa(new Peaje(crearMapa.getId1().getText(),Float.parseFloat(crearMapa.getCosto1().getText())),
 								new Peaje(crearMapa.getId2().getText(),Float.parseFloat(crearMapa.getCosto2().getText()))));
 						crearMapa.dispose();
 						}catch(NumberFormatException exception){
@@ -159,18 +157,18 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(panel_1.getMapa().getInicioMapa()==null){
+				if(grafo.getMapa().getInicioMapa()==null){
 					PEmEr error=new PEmEr("No existe Mapa, cree uno primero");
 					error.setVisible(true);
 				}else{
 					aN = new AgregarNodo();
-					aN.setBounds(100, 100, 309, 128);
+					
 					
 					aN.getAgregar().addActionListener(new ActionListener() {
 						
 						@Override
 						public void actionPerformed(ActionEvent arg1) {
-							panel_1.getMapa().agregarPeaje(new Peaje(aN.getId().getText(),Float.parseFloat(aN.getCosto().getText())));
+							grafo.getMapa().agregarPeaje(new Peaje(aN.getId().getText(),Float.parseFloat(aN.getCosto().getText())));
 						}
 					});
 					aN.getSalir().addActionListener(new ActionListener() {
@@ -181,8 +179,9 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 							
 						}
 					});
+					aN.setVisible(true);
 				}
-				aN.setVisible(true);
+				
 				
 			}
 		});
@@ -194,7 +193,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(panel_1.getMapa().getInicioMapa()==null){
+				if(grafo.getMapa().getInicioMapa()==null){
 					PEmEr error=new PEmEr("No existe Mapa, cree uno primero");
 					error.setVisible(true);
 				}else{
@@ -203,10 +202,10 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 						
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
-							panel_1.getMapa().agregarAvenida(new Avenida("",Integer.parseInt(aA.getFlujo().getText())
+							grafo.getMapa().agregarAvenida(new Avenida("",Integer.parseInt(aA.getFlujo().getText())
 									,Integer.parseInt(aA.getLongitud().getText())
-									,panel_1.getMapa().getPeaje(aA.getDesde().getText()),
-									panel_1.getMapa().getPeaje(aA.getHasta().getText()),
+									,grafo.getMapa().getPeaje(aA.getDesde().getText()),
+									grafo.getMapa().getPeaje(aA.getHasta().getText()),
 									true));
 									
 							}
@@ -303,33 +302,33 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		lblDesde.setBounds(0, 157, 46, 14);
 		panel.add(lblDesde);
 		
-		textField = new JTextField();
-		textField.setBounds(45, 155, 46, 20);
-		panel.add(textField);
-		textField.setEditable(false);
-		textField.setColumns(10);
+		desde = new JTextField();
+		desde.setBounds(45, 155, 46, 20);
+		panel.add(desde);
+		desde.setEditable(false);
+		desde.setColumns(10);
 		
 		JLabel label = new JLabel("Hasta:");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		label.setBounds(101, 158, 46, 14);
 		panel.add(label);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(140, 155, 46, 20);
-		textField_1.setEditable(false);
-		panel.add(textField_1);
+		hasta = new JTextField();
+		hasta.setColumns(10);
+		hasta.setBounds(140, 155, 46, 20);
+		hasta.setEditable(false);
+		panel.add(hasta);
 		
-		JLabel label_1 = new JLabel("Distancia máxima del submapa:");
-		label_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_1.setBounds(0, 182, 196, 14);
-		panel.add(label_1);
+		JLabel lblDistanciaMaxima = new JLabel("Distancia máxima del submapa:");
+		lblDistanciaMaxima.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblDistanciaMaxima.setBounds(0, 182, 196, 14);
+		panel.add(lblDistanciaMaxima);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(186, 180, 46, 20);
-		textField_2.setEditable(false);
-		panel.add(textField_2);
+		distanciaSubM = new JTextField();
+		distanciaSubM.setColumns(10);
+		distanciaSubM.setBounds(186, 180, 46, 20);
+		distanciaSubM.setEditable(false);
+		panel.add(distanciaSubM);
 		
 		 rdbtnCambiarEstadoDe = new JRadioButton("Cambiar estado de avenida.");
 		buttonGroup.add(rdbtnCambiarEstadoDe);
@@ -350,7 +349,7 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		
 		 textArea = new TextArea();
 		textArea.setSelectionEnd(10);
-		textArea.setBounds(0, 235, 280, 160);
+		textArea.setBounds(0, 235, 280, 153);
 		panel.add(textArea);
 		
 		btnLimpiar = new JButton("Limpiar");
@@ -358,34 +357,67 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 		btnLimpiar.addActionListener(this);
 		panel.add(btnLimpiar);
 		
+		JButton btnMostrarAvenidas = new JButton("Mostrar avenidas");
+		btnMostrarAvenidas.setBounds(140, 394, 140, 23);
+		panel.add(btnMostrarAvenidas);
+		btnMostrarAvenidas.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				textArea.append("Las avenidas del mapa son:\n");
+				for(Avenida iterador:grafo.getMapa().getListaAvenidas()) {
+					textArea.append(iterador.toString()+"\n");
+				}
+			}
+		});
 		
-		panel_1 = new Grafo(new Mapa());
-		panel_1.setBounds(300, 10, 490, 430);
-		frmSentiers.getContentPane().add(panel_1);
+		JButton btnMostrarPeajes = new JButton("Mostrar Peajes");
+		btnMostrarPeajes.setBounds(0, 394, 137, 23);
+		panel.add(btnMostrarPeajes);
+		btnMostrarPeajes.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				textArea.append("Los peajes del mapa son:\n");
+				for(Peaje iterador:grafo.getMapa().getListaPeajes()) {
+					textArea.append(iterador.toString()+"\n");
+				}
+			}
+		});
+		
+		grafo = new Grafo(new Mapa());
+		grafo.setBounds(300, 10, 490, 430);
+		frmSentiers.getContentPane().add(grafo);
+		
+		lblSeleccioneSuOpcion = new JLabel("Seleccione su opcion y ejecute.");
+		lblSeleccioneSuOpcion.setBounds(10, 10, 260, 14);
+		frmSentiers.getContentPane().add(lblSeleccioneSuOpcion);
 		
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==mntmNuevoMapa){
-			
-		}
+		
 		if(e.getSource()==mntmCargar){
-			cmp= new CargarMapa();
-			cmp.btnNewButton.addActionListener(new ActionListener() {
-				
+			
+			 cmp = new CargarMapa();
+			cmp.setVisible(true);
+			cmp.getJf().addActionListener(new ActionListener() {
+			
 				@Override
 				public void actionPerformed(ActionEvent e1) {
-					if(e1.getSource()==cmp.btnNewButton){
-						st= cmp.textField.getText();
+					
+					
+					
+						
 
 							try {
-								panel_1= new Grafo(new Mapa(st));
-								panel_1.setBounds(300, 10, 490, 430);
-								panel_1.setVisible(true);
-								frmSentiers.getContentPane().add(panel_1);
-								panel_1.repaint();
+								grafo= new Grafo(new Mapa(cmp.getJf().getSelectedFile()));
+								grafo.setBounds(300, 10, 490, 430);
+								grafo.setVisible(true);
+								frmSentiers.getContentPane().add(grafo);
+								grafo.repaint();
 								
 							} catch (FileNotFoundException ex) {
 								PEmEr error=new PEmEr("Problema Al cargar el archivo");
@@ -393,15 +425,18 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 							} catch (IOException ex) {
 								PEmEr error=new PEmEr("Problema Al cargar el archivo");
 								error.setVisible(true);
+							}catch(NullPointerException n){
+								n.printStackTrace();
 							}
 				   
 					cmp.dispose();
-					}
-					
+										
 				}
 			});
-			cmp.setVisible(true);
+			
 		}
+			
+		
 		if(e.getSource()==mntmSalir){
 			this.dispose();
 		}
@@ -413,38 +448,43 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 			try{
 				if(rdbtnDestinosPosibles.isSelected()){
 					
-					panel_1.getMapa().destinosPosibles(panel_1.getPeaje(textField.getText()));
-					textArea.append("Destinos posibles: "+panel_1.getMapa().getPeajesposibles()+"\n");
+					grafo.getMapa().destinosPosibles(grafo.getPeaje(desde.getText()));
+					textArea.append("Destinos posibles: "+grafo.getMapa().getPeajesposibles()+"\n");
 					textArea.setForeground(Color.GREEN);
-					panel_1.repaint();
+					grafo.repaint();
 					
-				}else if(rdbtnDistanciaMasCorta.isSelected()){
-					panel_1.getMapa().masCortos(panel_1.getPeaje(textField.getText()), panel_1.getPeaje(textField_1.getText()));
-					textArea.append("El camino mas corto es de: "+panel_1.getMapa().getCaminosCortos()+"\n");
+					
+				}else if(rdbtnDistanciaMasCorta.isSelected() ){
+					grafo.getMapa().masCortos(grafo.getPeaje(desde.getText()), grafo.getPeaje(hasta.getText()));
+					textArea.append("El camino mas corto es de: "+grafo.getMapa().getMenosKms()+" kilómetros\n");
+					textArea.append("El camino mas es por: "+grafo.getMapa().getCaminosCortos()+"\n");
 					textArea.setForeground(Color.GREEN);
-					panel_1.repaint();
+					grafo.repaint();
+					grafo.getMapa().reSet();
 				}else if(rdbtnFlujoMximoDe.isSelected()){
-					textArea.append("Flujo Máximo: "+panel_1.getMapa().flujoMaximo()+" vehiculos por hora\n");
+					textArea.append("Flujo Máximo: "+grafo.getMapa().flujoMaximo()+" vehículos por hora\n");
 					textArea.setForeground(Color.GREEN);
-					panel_1.repaint();
+					grafo.repaint();
+					grafo.getMapa().reSet();
 				}else if(rdbtnMenorCantidadDe.isSelected()){
-					panel_1.getMapa().menosPeajes(panel_1.getPeaje(textField.getText()), panel_1.getPeaje(textField_1.getText()));
-					textArea.append("Camino con menos peajes: "+panel_1.getMapa().getCaminosMenosPeajes()+"\n");
+					grafo.getMapa().menosPeajes(grafo.getPeaje(desde.getText()), grafo.getPeaje(hasta.getText()));
+					textArea.append("Camino con menos peajes: "+grafo.getMapa().getCaminosMenosPeajes()+"\n");
 					textArea.setForeground(Color.GREEN);
-					panel_1.repaint();
+					grafo.repaint();
+					grafo.getMapa().reSet();
 				}else if(rdbtnSubmapa.isSelected()){
-					panel_1.getMapa().subGrafo(panel_1.getPeaje(textField.getText()), Integer.parseInt(textField_2.getText()));
-					textArea.append("El subgrafo contiene a los peajes: "+panel_1.getMapa().getSubMap().getListaPeajes()+"\n");
-					Grafo panel_2 = new Grafo(panel_1.getMapa().getSubMap());
+					grafo.getMapa().subGrafo(grafo.getPeaje(desde.getText()), Integer.parseInt(distanciaSubM.getText()));
+					textArea.append("El subgrafo contiene a los peajes: "+grafo.getMapa().getSubMap().getListaPeajes()+"\n");
+					Grafo panel_2 = new Grafo(grafo.getMapa().getSubMap());
 					panel_2.setBounds(300, 10, 490, 430);
 					textArea.setForeground(Color.GREEN);
 					frmSentiers.getContentPane().add(panel_2);
 					panel_2.repaint();
 				}else if(rdbtnCambiarEstadoDe.isSelected()){
-					panel_1.getMapa().cambiarEstado(panel_1.getPeaje(textField.getText()), panel_1.getPeaje(textField_1.getText()));
-					textArea.append("El camino mas corto es de: "+panel_1.getMapa().getCaminosCortos()+"\n");
+					grafo.getMapa().cambiarEstado(grafo.getPeaje(desde.getText()), grafo.getPeaje(hasta.getText()));
+					textArea.append("El estado de la avenida "+desde.getText()+"->"+hasta.getText()+"ha sido cambiado.\n");
 					textArea.setForeground(Color.GREEN);
-					panel_1.repaint();
+					grafo.repaint();
 				}//C:\Users\Usuario\Desktop\TPDIED\Prueba1.csv
 			}catch(NullPointerException exception){
 				textArea.setForeground(Color.RED);
@@ -455,44 +495,44 @@ public class Principal extends JFrame implements ActionListener, FocusListener {
 			}
 			
 		}else if(e.getSource()==btnDibujar){
-			panel_1.repaint();
+			grafo.repaint();
 		}else if(e.getSource()==btnLimpiar){
 			
-			panel_1.setMapa(null);
+			grafo.setMapa(null);
 			
-			panel_1.setBounds(300, 10, 490, 430);
+			grafo.setBounds(300, 10, 490, 430);
 			
-			panel_1.repaint();
-			panel_1.setVisible(false);
+			grafo.repaint();
+			grafo.setVisible(false);
 		}
 	}
 
 	@Override
 	public void focusGained(FocusEvent e) {
 		if(e.getSource()==rdbtnDestinosPosibles){
-			textField.setEditable(true);
-			textField_1.setEditable(false);
-			textField_2.setEditable(false);
+			desde.setEditable(true);
+			hasta.setEditable(false);
+			distanciaSubM.setEditable(false);
 		}else if(e.getSource()==rdbtnDistanciaMasCorta){
-			textField.setEditable(true);
-			textField_1.setEditable(true);
-			textField_2.setEditable(false);
+			desde.setEditable(true);
+			hasta.setEditable(true);
+			distanciaSubM.setEditable(false);
 		}else if(e.getSource()==rdbtnFlujoMximoDe){
-			textField.setEditable(false);
-			textField_1.setEditable(false);
-			textField_2.setEditable(false);
+			desde.setEditable(false);
+			hasta.setEditable(false);
+			distanciaSubM.setEditable(false);
 		}else if(e.getSource()==rdbtnMenorCantidadDe){
-			textField.setEditable(true);
-			textField_1.setEditable(true);
-			textField_2.setEditable(false);
+			desde.setEditable(true);
+			hasta.setEditable(true);
+			distanciaSubM.setEditable(false);
 		}else if(e.getSource()==rdbtnSubmapa){
-			textField.setEditable(true);
-			textField_1.setEditable(false);
-			textField_2.setEditable(true);
+			desde.setEditable(true);
+			hasta.setEditable(false);
+			distanciaSubM.setEditable(true);
 		}else if(e.getSource()==rdbtnCambiarEstadoDe){
-			textField.setEditable(true);
-			textField_1.setEditable(true);
-			textField_2.setEditable(false);
+			desde.setEditable(true);
+			hasta.setEditable(true);
+			distanciaSubM.setEditable(false);
 		}
 		
 	}

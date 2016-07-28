@@ -15,7 +15,7 @@ public class AgregarNodo extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JFrame frame;
+	private JPanel panel;
 	private JTextField textField;
 	private JTextField textField_1;
 	JButton button_1,button;
@@ -27,7 +27,7 @@ public class AgregarNodo extends JFrame{
 			public void run() {
 				try {
 					AgregarNodo window = new AgregarNodo();
-					window.frame.setVisible(true);
+					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -46,20 +46,20 @@ public class AgregarNodo extends JFrame{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 309, 128);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		setBounds(100, 100, 309, 128);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Sentiers - Agregar peaje");
 
 		
-		JPanel panel = new JPanel();
+		 panel = new JPanel();
 		panel.setBounds(10, 10, 293, 90);
 		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(panel);
 		panel.setLayout(null);
 		
 		 button_1 = new JButton("Salir");
-		button_1.setBounds(212, 61, 71, 23);
+		button_1.setBounds(197, 61, 86, 23);
 		panel.add(button_1);
 		
 		textField = new JTextField();
@@ -68,7 +68,7 @@ public class AgregarNodo extends JFrame{
 		panel.add(textField);
 		
 		 button = new JButton("Agregar");
-		button.setBounds(138, 61, 71, 23);
+		button.setBounds(109, 61, 86, 23);
 		panel.add(button);
 		
 		textField_1 = new JTextField();
@@ -77,13 +77,13 @@ public class AgregarNodo extends JFrame{
 		panel.add(textField_1);
 		
 		JLabel label = new JLabel("Costo:");
-		label.setBounds(158, 11, 32, 14);
+		label.setBounds(158, 11, 71, 14);
 		panel.add(label);
 		
 		JLabel label_1 = new JLabel("Nombre:");
-		label_1.setBounds(10, 11, 41, 14);
+		label_1.setBounds(10, 11, 86, 14);
 		panel.add(label_1);
-		pack();
+
 	}
 
 	public JTextField getId() {
